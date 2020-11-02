@@ -17,7 +17,6 @@ $Config = new CallConfig();
     <script src="js/plugins/jquery-2.1.0.min.js" type="text/javascript"></script>
     <script src="js/plugins/jquery.knob.js" type="text/javascript"></script>
     <script src="js/esmtest.js" type="text/javascript"></script>
-    <script src="js/center.json" type="text/javascript"></script>
     <script>
     $(function(){
         $('.gauge').knob({
@@ -31,7 +30,6 @@ $Config = new CallConfig();
             e.preventDefault();
         });
         const config = <?php echo json_encode($Config->getAll(), JSON_PRETTY_PRINT); ?>;
-        esm.getFromOtherServer();
     });
     </script>
 </head>

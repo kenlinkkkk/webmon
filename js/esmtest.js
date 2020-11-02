@@ -288,7 +288,7 @@ esm.getServices = function() {
     })
 }
 
-esm.getFromOtherServer = function() {
+esm.getFromOtherServer = function(data) {
     $.ajax({
         type: 'GET',
         dataType: 'json',

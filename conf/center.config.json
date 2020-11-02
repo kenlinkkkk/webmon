@@ -1,14 +1,4 @@
-[
-  {
-    "host": "localhost",
-    "disk": {
-      "refresh_time": 1
-    },
-    "service": {
-      "refresh_time": 1
-    },
-    "memory": {
-      "refresh_time": 1
-    }
-  }
-]
+{
+  "host" : "localhost",
+  "refresh_time" : 1
+}
