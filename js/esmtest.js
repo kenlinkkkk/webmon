@@ -288,11 +288,11 @@ esm.getServices = function() {
     })
 }
 
-esm.getFromOtherServer = function(data) {
+esm.getFromOtherServer = function() {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: data + '/libs/center.php',
+        url: 'libs/center.php',
         success: function (data) {
             console.log(data);
         }
@@ -302,6 +302,7 @@ esm.getFromOtherServer = function(data) {
 
 esm.getAll = function() {
     esm.getSystem();
+    esm.getFromOtherServer(),
     esm.getCpu();
     esm.getLoad_average();
     esm.getMemory();

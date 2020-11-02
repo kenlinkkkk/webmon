@@ -1,4 +1,74 @@
 {
-  "host": ["localhost"],
-  "refresh_time": 1
+  "esm": {
+    "version": "1.0",
+    "website": "",
+    "check_updates": false,
+    "auto_refresh": 1,
+    "theme": "aqua",
+    "custom_title": ""
+  },
+  "cpu": {
+    "refresh_time": 1,
+    "enable_temperature": true
+  },
+  "disk": {
+    "refresh_time": 1,
+    "show_tmpfs": false,
+    "show_filesystem": true
+  },
+  "ping": {
+    "refresh_time": 1,
+    "hosts": [
+      "10.54.136.12;TrieuPhu Web VIP",
+      "10.54.136.11;TrieuPhu Web 2",
+      "10.54.136.10;TrieuPhu Web 1"
+    ]
+  },
+  "last_login": {
+    "refresh_time": 1,
+    "enable": true,
+    "max": 10
+  },
+  "services": {
+    "refresh_time": 1,
+    "show_port": true,
+    "list": [
+      {
+        "name": "EVS Api",
+        "host": "10.50.9.60",
+        "port": 9081,
+        "protocol": "tcp"
+      },
+      {
+        "name": "mWin Api",
+        "host": "10.54.140.110",
+        "port": 6060,
+        "protocol": "tcp"
+      },
+      {
+        "name": "Database Web1",
+        "host": "localhost",
+        "port": 3306,
+        "protocol": "tcp"
+      },
+      {
+        "name": "Database Web2",
+        "host": "10.54.136.11",
+        "port": 3306,
+        "protocol": "tcp"
+      }
+    ]
+  },
+  "load_average": {
+    "refresh_time": 60
+  },
+  "network": {
+    "refresh_time": 1
+  },
+  "memory": {
+    "refresh_time": 60
+  },
+  "swap": {
+    "refresh_time": 60
+  }
 }

@@ -31,7 +31,7 @@ $Config = new CallConfig();
             e.preventDefault();
         });
         const config = <?php echo json_encode($Config->getAll(), JSON_PRETTY_PRINT); ?>;
-        esm.getFromOtherServer('http://localhost');
+        esm.getFromOtherServer();
     });
     </script>
 </head>
