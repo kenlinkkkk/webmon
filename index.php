@@ -29,7 +29,6 @@ $Config = new CallConfig();
         $('a.reload').click(function(e){
             e.preventDefault();
         });
-        const config = <?php echo json_encode($Config->getAll(), JSON_PRETTY_PRINT); ?>;
     });
     </script>
 </head>
@@ -44,83 +43,19 @@ $Config = new CallConfig();
 
 
 <div id="main-container">
-
-    <div class="box column-left" id="esm-system">
+    <?php foreach ($Config->get('host') as $item) {?>
+    <div class="box">
         <div class="box-header">
-            <h1>System</h1>
+            <h1><?php echo $item['name']?></h1>
         </div>
+        <div class="box" id="esm-memory-<?php echo $item['tag']?>">
+            <div class="box-header">
+                <h1>Memory</h1>
+            </div>
 
-        <div class="box-content">
-            <table class="firstBold">
-                <tbody>
-                    <tr>
-                        <td>Hostname</td>
-                        <td id="system-hostname"></td>
-                    </tr>
-                    <tr>
-                        <td>OS</td>
-                        <td id="system-os"></td>
-                    </tr>
-                    <tr>
-                        <td>Kernel version</td>
-                        <td id="system-kernel"></td>
-                    </tr>
-                    <tr>
-                        <td>Uptime</td>
-                        <td id="system-uptime"></td>
-                    </tr>
-                    <tr>
-                        <td>Last boot</td>
-                        <td id="system-last_boot"></td>
-                    </tr>
-                    <tr>
-                        <td>Current user(s)</td>
-                        <td id="system-current_users"></td>
-                    </tr>
-                    <tr>
-                        <td>Server date & time</td>
-                        <td id="system-server_date"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="box column-right" id="esm-disk">
-        <div class="box-header">
-            <h1>Disk usage</h1>
-        </div>
-
-        <div class="box-content">
-            <table>
-                <thead>
-                <tr>
-                    <?php if ($Config->get('disk:show_filesystem')): ?>
-                        <th class="w10p filesystem">Filesystem</th>
-                    <?php endif; ?>
-                    <th class="w20p">Mount</th>
-                    <th>Use</th>
-                    <th class="w15p">Free</th>
-                    <th class="w15p">Used</th>
-                    <th class="w15p">Total</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="cls"></div>
-
-    <div class="box column-left" id="esm-memory">
-        <div class="box-header">
-            <h1>Memory</h1>
-        </div>
-
-        <div class="box-content">
-            <table class="firstBold">
-                <tbody>
+            <div class="box-content">
+                <table class="firstBold">
+                    <tbody>
                     <tr>
                         <td class="w20p">Used %</td>
                         <td><div class="progressbar-wrap"><div class="progressbar" style="width: 0%;">0%</div></div></td>
@@ -137,32 +72,68 @@ $Config = new CallConfig();
                         <td class="w20p">Total</td>
                         <td id="memory-total"></td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-
-    <div class="t-center">
-        <div class="box column-right column-left" id="esm-services">
+        <div class="cls"></div>
+        <div class="box column-left" id="esm-disk-<?php echo $item['tag']?>">
             <div class="box-header">
-                <h1>Services status</h1>
+                <h1>Disk usage</h1>
             </div>
 
             <div class="box-content">
                 <table>
-                    <tbody></tbody>
+                    <thead>
+                    <tr>
+                        <th class="w10p filesystem">Filesystem</th>
+                        <th class="w20p">Mount</th>
+                        <th>Use</th>
+                        <th class="w15p">Free</th>
+                        <th class="w15p">Used</th>
+                        <th class="w15p">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
                 </table>
             </div>
         </div>
+        <div class="t-center">
+            <div class="box column-right column-right" id="esm-services-<?php echo $item['tag']?>">
+                <div class="box-header">
+                    <h1>Services status</h1>
+                </div>
+
+                <div class="box-content">
+                    <table>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="cls"></div>
     </div>
-
-    
-
-    <div class="cls"></div>
-
+    <?php } ?>
 </div>
 
+<script>
+    $(function(){
+        const config = <?php echo json_encode($Config->getAll(), JSON_PRETTY_PRINT); ?>;
+        for (var node in config.host) {
+            esm.getFromOtherServer(node.url, node.tag)
+        }
 
+        setInterval(function () {
+            for (var node in config.host) {
+                esm.getFromOtherServer(node.url, node.tag)
+            }
+        }, config.refresh_time * 1000)
+    });
+</script>
 
 </body>
 </html>

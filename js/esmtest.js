@@ -1,61 +1,5 @@
 var esm = {};
 
-
-esm.getSystem = function() {
-
-    var module = 'system';
-    var $box = $('.box#esm-'+module+' .box-content tbody');
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'libs/'+module+'.php',
-        success: function (data) {
-            esm.insertDatas($box, module, data)
-        }
-    })
-}
-
-
-esm.getLoad_average = function() {
-
-    var module = 'load_average';
-
-    esm.reloadBlock_spin(module);
-
-    var $box = $('.box#esm-'+module+' .box-content');
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'libs/'+module+'.php',
-        success: function (data) {
-            esm.reconfigureGauge($('input#load-average_1', $box), data[0]);
-            esm.reconfigureGauge($('input#load-average_5', $box), data[1]);
-            esm.reconfigureGauge($('input#load-average_15', $box), data[2]);
-        }
-    })
-}
-
-
-esm.getCpu = function() {
-
-    var module = 'cpu';
-
-    esm.reloadBlock_spin(module);
-    var $box = $('.box#esm-'+module+' .box-content tbody');
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'libs/'+module+'.php',
-        success: function (data) {
-            esm.insertDatas($box, module, data);
-        }
-    })
-
-}
-
-
 esm.getMemory = function() {
 
     var module = 'memory';
@@ -86,41 +30,6 @@ esm.getMemory = function() {
         }
     })
 }
-
-
-esm.getSwap = function() {
-
-    var module = 'swap';
-
-    esm.reloadBlock_spin(module);
-
-    var $box = $('.box#esm-'+module+' .box-content tbody');
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'libs/'+module+'.php',
-        success: function (data) {
-            esm.insertDatas($box, module, data);
-
-            // Percent bar
-            var $progress = $('.progressbar', $box);
-
-            $progress
-                .css('width', data.percent_used+'%')
-                .html(data.percent_used+'%')
-                .removeClass('green orange red');
-
-            if (data.percent_used <= 50)
-                $progress.addClass('green');
-            else if (data.percent_used <= 75)
-                $progress.addClass('orange');
-            else
-                $progress.addClass('red');
-        }
-    })
-}
-
 
 esm.getDisk = function() {
 
@@ -166,96 +75,6 @@ esm.getDisk = function() {
     })
 }
 
-
-esm.getLast_login = function() {
-
-    var module = 'last_login';
-
-    esm.reloadBlock_spin(module);
-    var $box = $('.box#esm-'+module+' .box-content tbody');
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'libs/'+module+'.php',
-        success: function (data) {
-            $box.empty();
-
-            for (var line in data)
-            {
-                var html = '';
-                html += '<tr>';
-                html += '<td>'+data[line].user+'</td>';
-                html += '<td class="w50p">'+data[line].date+'</td>';
-                html += '</tr>';
-
-                $box.append(html);
-            }
-        }
-    })
-}
-
-
-esm.getNetwork = function() {
-
-    var module = 'network';
-
-    esm.reloadBlock_spin(module);
-    var $box = $('.box#esm-'+module+' .box-content tbody');
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'libs/'+module+'.php',
-        success: function (data) {
-            $box.empty();
-
-            for (var line in data)
-            {
-                var html = '';
-                html += '<tr>';
-                html += '<td>'+data[line].interface+'</td>';
-                html += '<td>'+data[line].ip+'</td>';
-                html += '<td class="t-center">'+data[line].receive+'</td>';
-                html += '<td class="t-center">'+data[line].transmit+'</td>';
-                html += '</tr>';
-
-                $box.append(html);
-            }
-        }
-    })
-}
-
-
-esm.getPing = function(time) {
-
-    var module = 'ping';
-
-    // esm.reloadBlock_spin(module);
-    var $box = $('.box#esm-'+module+' .box-content tbody');
-
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: 'libs/'+module+'.php',
-        success: function (data) {
-            $box.empty();
-            for (var line in data)
-            {
-                var html = '';
-                html += '<tr>';
-                html += '<td>'+data[line].host+'</td>';
-                html += '<td>'+data[line].name+'</td>';
-                html += '<td>'+data[line].ping+' ms</td>';
-                html += '</tr>';
-
-                $box.append(html);
-            }
-        }
-    })
-}
-
-
 esm.getServices = function() {
 
     var module = 'services';
@@ -288,29 +107,90 @@ esm.getServices = function() {
     })
 }
 
-esm.getFromOtherServer = function(data) {
+esm.getFromOtherServer = function(url, tag) {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: 'libs/center.php',
+        url: url + '/libs/center.php',
         success: function (data) {
-            console.log(data);
+            // start memory
+            $box_memory = $('.box#esm-memory-'+tag+' .box-content tbody');
+            var memory = data.memory;
+            esm.insertDatas($box_memory, 'memory-' + tag, data);
+            var $progress = $('.box#esm-memory-'+tag+' .box-content tbody .progressbar');
+            $progress
+                .css('width', memory.percent_used+'%')
+                .html(memory.percent_used+'%')
+                .removeClass('green orange red');
+
+            if (memory.percent_used <= 50)
+                $progress.addClass('green');
+            else if (memory.percent_used <= 75)
+                $progress.addClass('orange');
+            else
+                $progress.addClass('red');
+            //end memory
+
+            //start box disk
+            $box_disk = $('.box#esm-disk-'+tag+' .box-content tbody')
+            var disk = data.disk;
+            $box_disk.empty();
+            for (var line in disk) {
+                var bar_class = '';
+
+                if (disk[line].percent_used <= 50)
+                    bar_class = 'green';
+                else if (disk[line].percent_used <= 75)
+                    bar_class = 'orange';
+                else
+                    bar_class = 'red';
+
+                var html = '';
+                html += '<tr>';
+
+                if (typeof disk[line].filesystem != 'undefined')
+                    html += '<td class="filesystem">'+disk[line].filesystem+'</td>';
+
+                html += '<td>'+disk[line].mount+'</td>';
+                html += '<td><div class="progressbar-wrap"><div class="progressbar '+bar_class+'" style="width: '+disk[line].percent_used+'%;">'+disk[line].percent_used+'%</div></div></td>';
+                html += '<td class="t-center">'+disk[line].free+'</td>';
+                html += '<td class="t-center">'+disk[line].used+'</td>';
+                html += '<td class="t-center">'+disk[line].total+'</td>';
+                html += '</tr>';
+
+                $box_disk.append(html);
+            }
+            //end box disk
+
+            //start box services
+            $box_services = $('.box#esm-services-'+tag+' .box-content tbody');
+            var services = data.services;
+            $box_services.empty();
+
+            for (var line in services)
+            {
+                var label_color  = services[line].status == 1 ? 'success' : 'error';
+                var label_status = services[line].status == 1 ? 'online' : 'offline';
+
+                var html = '';
+                html += '<tr>';
+                html += '<td class="w15p"><span class="label '+label_color+'">'+label_status+'</span></td>';
+                html += '<td>'+services[line].name+'</td>';
+                html += '<td class="w15p">'+services[line].port+'</td>';
+                html += '</tr>';
+
+                $box_services.append(html);
+            }
+            // end box services
         }
     })
 }
 
 
 esm.getAll = function() {
-    esm.getSystem();
-    esm.getFromOtherServer(),
-    esm.getCpu();
-    esm.getLoad_average();
+    esm.getFromOtherServer();
     esm.getMemory();
-    esm.getSwap();
     esm.getDisk();
-    esm.getLast_login();
-    esm.getNetwork();
-    esm.getPing();
     esm.getServices();
 }
 
@@ -363,15 +243,8 @@ esm.reconfigureGauge = function($gauge, newValue) {
 
 esm.mapping = {
     all: esm.getAll,
-    out: esm.getFromOtherServer(),
-    system: esm.getSystem,
-    load_average: esm.getLoad_average,
-    cpu: esm.getCpu,
+    out: esm.getFromOtherServer,
     memory: esm.getMemory,
-    swap: esm.getSwap,
     disk: esm.getDisk,
-    last_login: esm.getLast_login,
-    network: esm.getNetwork,
-    ping: esm.getPing,
     services: esm.getServices
 };

@@ -1,4 +1,10 @@
 {
-  "host" : "localhost",
-  "refresh_time" : 1
+  "host" : [
+    {
+      "name": "Trieu phu app",
+      "tag": "tp-app-1",
+      "url": "http://appmon.trothanhtrieuphu.vn"
+    }
+  ],
+  "refresh_time" : 30
 }

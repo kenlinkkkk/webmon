@@ -1,6 +1,6 @@
 <?php
 require '../autoload.php';
-$Config = new CallConfig();
+$Config = new Config();
 
 $data = array();
 $data_disk = array();
@@ -121,7 +121,7 @@ else
 $data[] = array(
     'memory' => $data_memory,
     'disk' => $data_disk,
-    'service' => $data_service,
+    'services' => $data_service,
 );
 
 echo json_encode($data);
